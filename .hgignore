@@ -1,0 +1,11 @@
+(.*)\.o$
+(.*)\.ko$
+^.pf4lin.ko.cmd$
+^.pf4lin.mod.o.cmd$
+^.pf4lin.o.cmd$
+^.pf4lin_main.o.cmd$
+^pf4lin.mod.c$
+^Module.symvers$
+^.tmp_versions/(.*)$
+^pfctl$
+
