@@ -30,5 +30,5 @@ dist: clean
 
 
 clean:
-	rm -rf *~ *.ko *.o *.mod.c pfctl .tmp_versions .pf4lin*
+	rm -rf *~ *.ko *.o *.mod.c pfctl .tmp_versions .pf4lin* Module.symvers
 
