@@ -2,7 +2,7 @@
 # $Id: Makefile,v 1.6 2005/07/08 21:49:02 lars Exp $
 
 NAME=pf4lin
-VERSION=0.01
+VERSION=0.02
 
 ifneq ($(KERNELRELEASE),)
  obj-m	:=  pf4lin.o	
@@ -28,5 +28,5 @@ dist: clean
 
 
 clean:
-	rm -rf *~ *.ko *.o *.mod.c .??* pfctl
+	rm -rf *~ *.ko *.o *.mod.c pfctl .tmp_versions .pf4lin*
 

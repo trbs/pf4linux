@@ -12,19 +12,16 @@
 #include <linux/icmp.h>
 #include <linux/skbuff.h>
 #include <linux/netfilter_ipv4.h>
+#include <linux/version.h>
 
 #include "pf4linvar.h"
 #include "pfvar.h"
 
-
-
 MODULE_LICENSE("Dual BSD/GPL");
 MODULE_AUTHOR("Lars Olsson, lo@abstractvoid.se");
-MODULE_DESCRIPTION("OpenBSD's pf (packefilter) for Linux");
-
+MODULE_DESCRIPTION("OpenBSD's PF (Packet Filter) for Linux");
 
 static int pf4lin_major = PF4LIN_MAJOR;
-
 
 /* changed by DIOCTOGGLEDEBUG */
 int debug = 0;
@@ -1555,7 +1552,11 @@ pf4lin_hook(unsigned int hook,
            int (*okfn)(struct sk_buff *))
 {
 	struct sk_buff *sb = *pskb;
-	struct iphdr *iph = sb->nh.iph;
+	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,22))
+	    struct iphdr *iph = (struct iphdr*) sb->network_header;
+	#else
+	    struct iphdr *iph = sb->nh.iph;
+	#endif
 	int action = NF_ACCEPT;
 	int direction = PF_OUT;
 
@@ -1579,7 +1580,11 @@ pf4lin_hook(unsigned int hook,
 	
 	switch(iph->protocol){
 	case IPPROTO_TCP:{
-		struct tcphdr *th = (struct tcphdr *)(sb->data + (sb->nh.iph->ihl * 4));
+		#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,22))
+		    struct tcphdr *th = (struct tcphdr *)(sb->data + (((struct iphdr*)sb->network_header)->ihl * 4));
+	    	#else
+		    struct tcphdr *th = (struct tcphdr *)(sb->data + (sb->nh.iph->ihl * 4));
+	    	#endif
 		int pf_action = -1;
 		
 		DEBUGMSG("tcp: SRC=%u.%u.%u.%u:%d DST=%u.%u.%u.%u:%d\n",
@@ -1599,7 +1604,11 @@ pf4lin_hook(unsigned int hook,
 		break;
 	}
 	case IPPROTO_UDP:{
-		struct udphdr *uh = (struct udphdr *)(sb->data + (sb->nh.iph->ihl * 4));
+		#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,22))
+		    struct udphdr *uh = (struct udphdr *)(sb->data + (((struct iphdr*)sb->network_header)->ihl * 4));
+	    	#else
+		    struct udphdr *uh = (struct udphdr *)(sb->data + (sb->nh.iph->ihl * 4));			
+	    	#endif
 		int pf_action = -1;
 		
 		DEBUGMSG("udp: SRC=%u.%u.%u.%u:%d DST=%u.%u.%u.%u:%d\n",
@@ -1618,7 +1627,11 @@ pf4lin_hook(unsigned int hook,
 		break;
 	}		
 	case IPPROTO_ICMP:{
-		struct icmphdr *th = (struct icmphdr *)(sb->data + (sb->nh.iph->ihl * 4));
+		#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,22))
+		    struct icmphdr *th = (struct icmphdr *)(sb->data + (((struct iphdr*)sb->network_header)->ihl * 4));
+	    	#else
+		    struct icmphdr *th = (struct icmphdr *)(sb->data + (sb->nh.iph->ihl * 4));
+	    	#endif
 		int pf_action = -1;
 
 		DEBUGMSG("icmp: SRC=%u.%u.%u.%u: DST=%u.%u.%u.%u:\n",
