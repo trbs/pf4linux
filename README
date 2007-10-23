@@ -1,0 +1,92 @@
+# $Id: README,v 1.5 2004/04/11 23:31:50 lars Exp $
+
+* What's this?
+
+pf4lin is a port of the OpenBSD packetfilter (pf), see 
+http://www.benzedrine.cx/pf.html, to Linux. At the moment  
+the port is done from the first sources of pf that were 
+checked in to the OpenBSD source tree back in June 2001.
+It is implemented as a kernel module so no patching of 
+the kernel is necessary to give it a go.
+
+
+* Why?
+
+Because!
+
+
+* Does it work?
+
+Well, I'm not sure if it works perfectly but it seems
+to work ok. If you find things that doesn't work please
+email me, or, better yet, send me a patch!
+
+The only things that I know doesn't work is the send_reset()
+for tcp.
+
+I have only tested it with the 2.6.3 kernel but I think it
+should work in 2.4 if the Mafile is changed.
+
+
+* How do I compile pf4lin?
+
+$ make && make pfctl
+
+
+* How do I run pf4lin?
+
+$ ./load.sh
+
+This scripts loads the module which is assigned a dynamic
+major number. The script then parses /proc/devices to
+find the assigned major number. Finally a device file
+called /dev/pf4lin is created with the major number.
+
+Now pfctl can be used to load rules, start/stop etc.
+
+One nifty command is
+$ ./pfctl td 
+which toggles debug mode (it is off to begin with).
+This will create more debug messages in /var/log/messages
+
+To unload the module simply:
+$ ./unload.sh
+
+
+* Where can I find a manual for pf4lin and pfctl?
+
+Use the source Luke :-) Some examples of filter 
+rules and nat stuff can be found in the files
+pf.conf and nat.conf. You can also see an old
+pf manual at http://www.inebriated.demon.nl/pf-howto/
+
+
+* Future plans:
+
+Try and port more modern versions of pf. The ultimate
+goal is to follow the -current tree. I also plan to
+write a script that will make porting easier by substituting
+different structure names like ip to iphdr and variable
+names like ip_sum to check etc. 
+
+
+* Other resources:
+
+OpenBSD: http://www.openbsd.org
+pf: http://www.benzedrine.cx/pf.html 
+
+
+* Thanks:
+
+Big thanks to the OpenBSD guys people for writing great
+software and especially Daniel Hartmeier for all the help.
+
+
+* Who's behind this thingy?
+
+Lars Olsson 
+lo@abstractvoid.se 
+L.A.Olsson@herts.ac.uk
+
+
+
