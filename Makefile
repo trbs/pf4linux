@@ -11,6 +11,8 @@ else
 KDIR	:= /lib/modules/$(shell uname -r)/build
 PWD	:= $(shell pwd)
 
+all:	module pfctl
+
 module:
 	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
 endif
