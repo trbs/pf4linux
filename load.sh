@@ -7,7 +7,7 @@ NAME=pf4lin
 echo "Loading module $NAME.ko";
 insmod $NAME.ko
 
-MAJOR=`cat /proc/devices | grep pf4lin | awk '{print $1}'`;
-echo "Creating /dev/$DEVNAME with major number $MAJOR";
-
-mknod /dev/pf4lin c $MAJOR 0;
+## device entry under /dev is now automaticly added and removed by udev
+#MAJOR=`cat /proc/devices | grep pf4lin | awk '{print $1}'`;
+#echo "Creating /dev/$DEVNAME with major number $MAJOR";
+#mknod /dev/pf4lin c $MAJOR 0;

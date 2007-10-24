@@ -17,6 +17,9 @@
 #include "pf4linvar.h"
 #include "pfvar.h"
 
+#define DRV_VERSION "0.02"
+
+MODULE_VERSION(DRV_VERSION);
 MODULE_LICENSE("Dual BSD/GPL");
 MODULE_AUTHOR("Lars Olsson, lo@abstractvoid.se");
 MODULE_DESCRIPTION("OpenBSD's PF (Packet Filter) for Linux");
@@ -1689,12 +1692,13 @@ struct file_operations pf4lin_fops = {
     release:      pf4lin_close,
 };
 
+static struct class *pf4lin_class;
 
 static int pf4lin_init(void)
 {
         int result;
 	
-	INFO("pf4lin_init\n");
+	printk("pf4lin: OpenBSD PF for Linux version " DRV_VERSION " loaded\n");
 
 	result = register_chrdev(pf4lin_major, "pf4lin", &pf4lin_fops);
 	if (result < 0) {
@@ -1703,20 +1707,28 @@ static int pf4lin_init(void)
 	}
 	if (pf4lin_major == 0) pf4lin_major = result; /* dynamic */
 
+	pf4lin_class = class_create(THIS_MODULE, "pf4linux");
+	if (IS_ERR(pf4lin_class)) {
+		unregister_chrdev(pf4lin_major, "pf4lin");
+		return PTR_ERR(pf4lin_class);
+	}
+	class_device_create(pf4lin_class, NULL, MKDEV(pf4lin_major, 0), NULL, "%s", "pf4lin");
+
 	nf_register_hook(&forward_ops);
 	nf_register_hook(&pre_routing_ops);
 	nf_register_hook(&post_routing_ops);
 
 	memset(&status, 0, sizeof(struct status));
 	
-	
 	return 0;
 }
 
 static void pf4lin_exit(void)
 {
-        INFO("pf4lin_exit\n");
+	printk("pf4lin: OpenBSD PF for Linux version " DRV_VERSION " removed\n");
 
+	class_device_destroy(pf4lin_class, MKDEV(pf4lin_major, 0));
+	class_destroy(pf4lin_class);
 	unregister_chrdev(pf4lin_major, "pf4lin");
 
 	nf_unregister_hook(&forward_ops);
