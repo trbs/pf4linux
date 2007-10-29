@@ -70,6 +70,10 @@ different structure names like ip to iphdr and variable
 names like ip_sum to check etc. 
 
 
+* Known problems:
+
+Alpha: code segfaults (reported on a dec alpha ds10 machine running debian)
+
 * Other resources:
 
 OpenBSD: http://www.openbsd.org
@@ -88,5 +92,6 @@ Lars Olsson
 lo@abstractvoid.se 
 L.A.Olsson@herts.ac.uk
 
-
+Ido Sebastiaan van Oostveen
+v dot oostveen at gmail dot com
 

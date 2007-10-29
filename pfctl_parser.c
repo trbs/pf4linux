@@ -38,6 +38,7 @@
 #include <ctype.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <time.h>
 
 #include "pfctl_parser.h"
 
@@ -171,14 +172,75 @@ print_rdr(struct rdr *r)
 void
 print_status(struct status *s)
 {
-	time_t t = time(NULL);
-	printf("%u %u %u", t, s->since, s->running);
+	char			statline[80], *running;
+	time_t			runtime;
+	//int			i;
+	//char			buf[PF_MD5_DIGEST_LENGTH * 2 + 1];
+	//static const char	hex[] = "0123456789abcdef";
+
+	//runtime = time(NULL) - s->since;
+	runtime = s->since;
+	running = s->running ? "Enabled" : "Disabled";
+	
+	// FIXME: pf4lin_ioctl.c breaks since timer in DIOCSTATUS
+	if (s->since) {
+		unsigned	sec, min, hrs, day = runtime;
+		
+		sec = day % 60;
+		day /= 60;
+		min = day % 60;
+		day /= 60;
+		hrs = day % 24;
+		day /= 24;
+                snprintf(statline, sizeof(statline),
+                        "Status: %s for %u days %.2u:%.2u:%.2u",
+                        running, day, hrs, min, sec);
+	} else
+		snprintf(statline, sizeof(statline), "Status: %s", running);
+	printf("%-44s", statline);
+	/* // Todo
+	switch (s->debug) {
+		case 0:
+			printf("None");
+			break;
+		case 1:
+			printf("Urgent");
+			break;
+		case 2:
+			printf("Misc");
+			break;
+	}
+	*/
+	printf("\n");
 	if (s->running) {
-		printf(" %u %u", s->bytes[0], s->bytes[1]);
-		printf(" %u %u", s->packets[0][0], s->packets[0][1]);
-		printf(" %u %u", s->packets[1][0], s->packets[1][1]);
-		printf(" %u %u %u %u", s->states, s->state_inserts,
-		    s->state_removals, s->state_searches);
+		//printf(" %u %u", s->bytes[0], s->bytes[1]);
+		//printf(" %u %u", s->packets[0][0], s->packets[0][1]);
+		//printf(" %u %u", s->packets[1][0], s->packets[1][1]);
+		printf("%-27s %14s %16s\n", "State table", "Total", "Rate");
+		printf("  %-25s %14u %14s\n", "current entries", s->states, "");
+		printf("  %-25s %14llu ", "searches",
+				(unsigned long long)s->state_searches);
+		if (runtime > 0)
+			printf("%14.1f/s\n",
+				(double)s->state_searches / (double)runtime);
+		else
+			printf("%14s\n", "");
+		printf("  %-25s %14llu ", "inserts",
+				(unsigned long long)s->state_inserts);
+		if (runtime > 0)  
+                        printf("%14.1f/s\n",
+                                (double)s->state_inserts / (double)runtime);
+                else
+                        printf("%14s\n", "");
+		printf("  %-25s %14llu ", "removals",
+				(unsigned long long)s->state_removals);
+		if (runtime > 0)
+                        printf("%14.1f/s\n",
+                                (double)s->state_removals / (double)runtime);
+                else
+                        printf("%14s\n", "");
+		//printf(" %u %u %u %u", s->states, s->state_inserts,
+		//    s->state_removals, s->state_searches);
 	}
 	printf("\n");
 }

@@ -1,8 +1,13 @@
 
 # $Id: Makefile,v 1.6 2005/07/08 21:49:02 lars Exp $
 
-NAME=pf4lin
+NAME=	pf4lin
 VERSION=0.02
+PROG=	pfctl
+SRC=	pfctl.c pfctl_parser.c
+CFLAGS+= -Wall -Wmissing-prototypes -Wno-uninitialized
+CFLAGS+= -Wstrict-prototypes 
+#MAN=	pfctl.8
 
 ifneq ($(KERNELRELEASE),)
  obj-m	:=  pf4lin.o	
@@ -17,8 +22,8 @@ module:
 	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
 endif
 
-pfctl:
-	 gcc -o  pfctl  pfctl.c pfctl_parser.c
+$(PROG): $(SRC)
+	gcc $(CFLAGS) -o $@ $^
 
 dist: clean
 	@echo "making new release"

@@ -43,8 +43,8 @@
 
 #include "pfctl_parser.h"
 
+void		 usage(void);
 static void	 printerror(char *);
-static void	 usage(char *);
 static char	*load_file(char *, size_t *);
 int		 main(int, char *[]);
 
@@ -68,15 +68,12 @@ printerror(char *s)
 	return;
 }
 
-static void
-usage(char *argv0)
+void
+usage(void)
 {
-	char *n = rindex(argv0, '/');
-	if (n != NULL)
-		n++;
-	else
-		n = argv0;
-	fprintf(stderr, "Usage: %s command argument\n", n);
+        extern char *__progname;
+
+	fprintf(stderr, "Usage: %s command argument\n", __progname);
 	fprintf(stderr, "\tstart\t\t\tStart packet filter\n");
 	fprintf(stderr, "\tstop\t\t\tStop packet filter\n");
 	fprintf(stderr, "\tshow\trules\t\tShow filter rules\n");
@@ -91,6 +88,14 @@ usage(char *argv0)
 	fprintf(stderr, "\tload\trules\t<file>\tLoad filter rules\n");
 	fprintf(stderr, "\t\tnat\t<file>\t     NAT/RDR rules\n");
 	fprintf(stderr, "\tlog\t\t<if>\tSet interface to log\n");
+	
+        fprintf(stderr, "usage: %s [-AdeghmNnOqRrvz] ", __progname);
+        fprintf(stderr, "[-a anchor] [-D macro=value] [-F modifier]\n");
+        fprintf(stderr, "\t[-f file] [-i interface] [-K host | network] ");
+        fprintf(stderr, "[-k host | network]\n");
+        fprintf(stderr, "\t[-o level] [-p device] [-s modifier]\n");
+        fprintf(stderr, "\t[-t table -T command [address ...]] [-x level]\n");
+        exit(1);
 }
 
 static char *
@@ -143,7 +148,7 @@ main(int argc, char *argv[])
 	memset(ub->buffer, 0, ub->size);
 	ub->entries = 0;
 	if (argc < 2) {
-		usage(argv[0]);
+		usage();
 		return 1;
 	}
 	dev = open("/dev/pf4lin", O_RDWR);
@@ -172,7 +177,7 @@ main(int argc, char *argv[])
 	else if (!strcmp(argv[1], "show")) {
 		if (argc < 3) {
 			close(dev);
-			usage(argv[0]);
+			usage();
 			return 1;
 		}
 		if (!strcmp(argv[2], "rules")) {
@@ -211,7 +216,7 @@ main(int argc, char *argv[])
 					proto = IPPROTO_ICMP;
 				else {
 					close(dev);
-					usage(argv[0]);
+					usage();
 					return 1;
 				}
 			}
@@ -231,14 +236,14 @@ main(int argc, char *argv[])
 		}
 		else {
 			close(dev);
-			usage(argv[0]);
+			usage();
 			return 1;
 		}
 	}
 	else if (!strcmp(argv[1], "clear")) {
 		if (argc < 3) {
 			close(dev);
-			usage(argv[0]);
+			usage();
 			return 1;
 		}
 		ub->entries = 0;
@@ -262,14 +267,14 @@ main(int argc, char *argv[])
 		}
 		else {
 			close(dev);
-			usage(argv[0]);
+			usage();
 			return 1;
 		}
 	}
 	else if (!strcmp(argv[1], "log")) {
 		if (argc < 3) {
 			close(dev);
-			usage(argv[0]);
+			usage();
 			return 1;
 		}
 		strncpy(ub->buffer, argv[2], 16);
@@ -286,7 +291,7 @@ main(int argc, char *argv[])
 		if ((argc < 4) || (strcmp(argv[2], "nat") &&
 		    strcmp(argv[2], "rules"))) {
 			close(dev);
-			usage(argv[0]);
+			usage();
 			return 1;
 		}
 		buf = load_file(argv[3], &len);
@@ -368,7 +373,7 @@ main(int argc, char *argv[])
 	}
 	else {
 		close(dev);
-		usage(argv[0]);
+		usage();
 		return 1;
 	}
 	close(dev);
