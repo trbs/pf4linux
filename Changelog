@@ -1,0 +1,43 @@
+2007-10-29  Bas van Oostveen  <v.oostveen@idca.nl>
+
+	* Makefile, README, pf.conf, pfctl.c, pfctl_parser.c:
+	begin updating pfctl added known bugs in README reworked makefile a
+	bit (so that changes to c files are picked up by gmake)
+	[dcafc5a2c04c] [tip]
+
+2007-10-25  Bas van Oostveen  <v.oostveen@idca.nl>
+
+	* load.sh, pf4lin_main.c, unload.sh:
+	added udev support
+	[da0aee571b3e]
+
+2007-10-24  Bas van Oostveen  <v.oostveen@idca.nl>
+
+	* README:
+	fix typo
+	[d2d3b09e9e67]
+
+2007-10-23  Bas van Oostveen  <v.oostveen@idca.nl>
+
+	* .hgignore:
+	added ignore file
+	[170fa401c901]
+
+	* Makefile:
+	added some extra files to cleanup
+	[bf99c6d2c3a9]
+
+	* Makefile:
+	added pfctl build to all rule in Makefile
+	[c4aa17ed9669]
+
+	* Makefile, pf4lin_main.c:
+	applied patch for linux 2.6.22 and up cleaned up Makefile
+	[bddd5b7449d4]
+
+	* Makefile, README, load.sh, nat.conf, nat.rules, pf.c, pf.conf,
+	pf4lin_ioctl.c, pf4lin_ioctl.h, pf4lin_main.c, pf4linvar.h, pfctl.c,
+	pfctl_parser.c, pfctl_parser.h, pfvar.h, unload.sh:
+	initial import
+	[50844088cc7a]
+

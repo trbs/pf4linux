@@ -1,0 +1,12 @@
+PF4Lin for Debian
+-----------------
+
+To build and install the PF4Lin module using m-a, run:
+
+  module-assistant auto-install pf4lin-source
+
+or for those who don't like to type:
+
+  m-a a-i pf4lin
+
+ -- Ing. Ido Sebastiaan van Oostveen <v.oostveen@idca.nl>  Thu,  13 Nov 2007 15:35:40 +0200

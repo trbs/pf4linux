@@ -1,0 +1,36 @@
+Source: pf4lin
+Section: misc
+Priority: extra
+Maintainer: Ing. Ido Sebastiaan van Oostveen <v.oostveen@idca.nl>
+Build-Depends: debhelper (>= 5), bzip2
+Standards-Version: 3.7.2
+Homepage: http://hg.trbs.net/pf4lin/
+XS-Vcs-Hg: http:///hg.trbs.net/pf4lin/
+XS-Vcs-Browser: http://hg.trbs.net/pf4lin/
+
+Package: pf4lin
+Architecture: i386
+Depends: ${misc:Depends}, module-init-tools (>= 3.2.1)
+Description: OpenBSD PF for Linux Firewall tools
+ PF4Lin is a port of the OpenBSD PF (Packet Filter) for the Linux 2.6
+ kernel. It hooks in on Netfilter hooks in the Linux kernel to allow
+ the PF engine to firewall incoming and outgoing traffic as well as
+ NAT and Redirections. Currently ALTQ is not supported.
+ .
+ Homepage: http://hg.trbs.net/pf4lin/
+ .
+ This package contains the pf tools and configuration files.
+
+Package: pf4lin-source
+Architecture: all
+Depends: debhelper (>=5), module-assistant, bzip2
+Description: OpenBSD PF for Linux Firewall kernel driver [source]
+ PF4Lin is a port of the OpenBSD PF (Packet Filter) for the Linux 2.6
+ kernel. It hooks in on Netfilter hooks in the Linux kernel to allow
+ the PF engine to firewall incoming and outgoing traffic as well as
+ NAT and Redirections. Currently ALTQ is not supported.
+ .
+ Homepage: http://hg.trbs.net/pf4lin/
+ .
+ This package contains the packaged source for the module for ease
+ of building with the module-assistant or kernel-package tools.

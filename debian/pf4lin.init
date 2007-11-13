@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# pf4lin control script
+#
+set -e
+
+PFCTL=/sbin/pfctl
+
+[ -f /etc/default/alsa ] && . /etc/default/alsa
+
+echo "TODO NOT FINISHED YET"
