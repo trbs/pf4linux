@@ -74,6 +74,10 @@ names like ip_sum to check etc.
 
 Alpha: code segfaults (reported on a dec alpha ds10 machine running debian)
 
+* Tested With:
+
+I386 and X86_64
+
 * Other resources:
 
 OpenBSD: http://www.openbsd.org
