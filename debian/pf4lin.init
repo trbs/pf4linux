@@ -1,11 +1,59 @@
 #!/bin/sh
-#
-# pf4lin control script
-#
+### BEGIN INIT INFO
+# Provides:          pf4lin
+# Required-Start:    $network $syslog
+# Required-Stop:     
+# Default-Start:     2 3 5 
+# Default-Stop:      0 6 
+# Description: Starts pf4lin firewall configuration 
+# short-description: pf4lin firewall configuration
+# required-stop: $network 
+### END INIT INFO
+
+#includes lsb functions 
+. /lib/lsb/init-functions
+
 set -e
 
 PFCTL=/sbin/pfctl
 
-[ -f /etc/default/alsa ] && . /etc/default/alsa
+[ -f /etc/default/pf4lin ] && . /etc/default/pf4lin
 
-echo "TODO NOT FINISHED YET"
+test -x /sbin/pfctl || exit 0
+
+PATH=/sbin:/bin
+NAME=pf4lin
+DESC=Firewall
+
+COMMAND="$1" 
+shift
+
+case "$COMMAND" in
+  start)
+	log_daemon_msg "Starting $DESC" "$NAME"
+	#/sbin/firehol start "$@" >/dev/null || log_end_msg 1
+	/sbin/pfctl start || log_end_msg 1
+	/sbin/pfctl load rules /etc/pf.conf || log_end_msg 1
+	log_end_msg 0
+	;;
+  stop)
+	log_daemon_msg "Stopping $DESC" "$NAME"
+	#/sbin/firehol stop "$@" >/dev/null || log_end_msg 1
+	/sbin/pfctl stop || log_end_msg 1
+	log_end_msg 0
+	;;
+  restart|force-reload)
+	log_daemon_msg "Restarting $DESC configuration" 
+	#/sbin/firehol restart "$@" >/dev/null || log_end_msg 1
+	#/sbin/pfctl -f /etc/pf.conf
+	/sbin/pfctl load rules /etc/pf.conf || log_end_msg 1
+	log_action_end_msg 0 
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	log_action_msg "Usage: $N {start|stop|restart|force-reload} [<args>]" >&2
+	exit 1
+	;;
+esac
+
+exit 0

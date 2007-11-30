@@ -81,7 +81,8 @@ install-stamp:
 # Copy pfctl
 	mkdir -p debian/pf4lin/sbin
 	cp pfctl debian/pf4lin/sbin
-	mkdir -p debian/pf4lin/etc/{init.d,default}
+	mkdir -p debian/pf4lin/etc/init.d
+	mkdir -p debian/pf4lin/etc/default
 	install -o root -g root -m755 debian/pf4lin.init debian/pf4lin/etc/init.d/pf4lin
 	install -o root -g root -m644 debian/pf4lin.default debian/pf4lin/etc/default/pf4lin
 	install -o root -g root -m640 pf.conf debian/pf4lin/etc/pf.conf
