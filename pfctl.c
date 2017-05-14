@@ -95,7 +95,7 @@ usage(void)
         fprintf(stderr, "[-k host | network]\n");
         fprintf(stderr, "\t[-o level] [-p device] [-s modifier]\n");
         fprintf(stderr, "\t[-t table -T command [address ...]] [-x level]\n");
-        exit(1);
+        //exit(1);
 }
 
 static char *
@@ -149,11 +149,15 @@ main(int argc, char *argv[])
 	ub->entries = 0;
 	if (argc < 2) {
 		usage();
+		free(ub->buffer);
+		free(ub);
 		return 1;
 	}
 	dev = open("/dev/pf4lin", O_RDWR);
 	if (dev < 0) {
 		printerror("open(/dev/pf4lin)");
+		free(ub->buffer);
+		free(ub);
 		return 1;
 	}
 	if (!strcmp(argv[1], "start")) {
@@ -178,6 +182,8 @@ main(int argc, char *argv[])
 		if (argc < 3) {
 			close(dev);
 			usage();
+			free(ub->buffer);
+			free(ub);
 			return 1;
 		}
 		if (!strcmp(argv[2], "rules")) {
@@ -217,6 +223,8 @@ main(int argc, char *argv[])
 				else {
 					close(dev);
 					usage();
+					free(ub->buffer);
+					free(ub);
 					return 1;
 				}
 			}
@@ -237,6 +245,8 @@ main(int argc, char *argv[])
 		else {
 			close(dev);
 			usage();
+	    		free(ub->buffer);
+			free(ub);
 			return 1;
 		}
 	}
@@ -244,6 +254,8 @@ main(int argc, char *argv[])
 		if (argc < 3) {
 			close(dev);
 			usage();
+			free(ub->buffer);
+			free(ub);
 			return 1;
 		}
 		ub->entries = 0;
@@ -268,6 +280,8 @@ main(int argc, char *argv[])
 		else {
 			close(dev);
 			usage();
+			free(ub->buffer);
+			free(ub);
 			return 1;
 		}
 	}
@@ -275,6 +289,8 @@ main(int argc, char *argv[])
 		if (argc < 3) {
 			close(dev);
 			usage();
+			free(ub->buffer);
+			free(ub);
 			return 1;
 		}
 		strncpy(ub->buffer, argv[2], 16);
@@ -292,10 +308,14 @@ main(int argc, char *argv[])
 		    strcmp(argv[2], "rules"))) {
 			close(dev);
 			usage();
+			free(ub->buffer);
+			free(ub);
 			return 1;
 		}
 		buf = load_file(argv[3], &len);
 		if (buf == NULL)
+			free(ub->buffer);
+			free(ub);
 			return 1;
 
 		if (!strcmp(argv[2], "rules")) {
@@ -346,6 +366,8 @@ main(int argc, char *argv[])
 			free(buf);
 			buf = load_file(argv[3], &len);
 			if (buf == NULL)
+			        free(ub->buffer);
+				free(ub);
 				return 1;
 			n = 0;
 			nr = 0;
@@ -374,6 +396,8 @@ main(int argc, char *argv[])
 	else {
 		close(dev);
 		usage();
+		free(ub->buffer);
+		free(ub);
 		return 1;
 	}
 	close(dev);
