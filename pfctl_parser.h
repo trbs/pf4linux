@@ -47,4 +47,16 @@ void	 print_rdr (struct rdr *);
 void	 print_state (struct state *);
 void	 print_status (struct status *);
 
+struct pfctl {
+    int dev;
+    int opts;
+    u_int16_t rule_nr;
+    struct pfioc_rule *prule;
+    struct pfioc_nat *pnat;
+    struct pfioc_binat *pbinat;
+    struct pfioc_rdr *prdr;
+};
+
+int	 parse_rules(FILE *, struct pfctl *);
+
 #endif /* _PFM_PARSER_H_ */
